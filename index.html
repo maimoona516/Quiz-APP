@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML & CSS Quiz</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="start-container" id="start-container">
+        <h1>Welcome to the Quiz</h1>
+        <label for="username">Enter your name:</label>
+        <input type="text" id="username" placeholder="Your Name">
+        <button class="btn start-btn" id="start-btn">Start Quiz</button>
+    </div>
+
+    <div class="quiz-container hidden" id="quiz-container">
+        <h1 id="welcome-text">Welcome!</h1>
+        
+        <div id="timer">Time: <span id="time-left">02:00</span></div>
+        <div id="question-container">
+            <div id="question"></div>
+            <ul id="answer-buttons" class="answer-buttons"></ul>
+        </div>
+        <button id="next-btn" class="btn next-btn hidden">Next Question</button>
+    </div>
+
+    <div class="result-container hidden" id="result-container">
+        <h1 id="result-message"></h1>
+        <div id="emoji"></div>
+        <p id="grade"></p>
+
+        <p>Your Score: <span id="user-score"></span></p>
+        <button class="btn" id="restart-btn">Restart Quiz</button>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
+

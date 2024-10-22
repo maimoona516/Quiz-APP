@@ -112,9 +112,11 @@ h1 {
     width: 100%;
     text-align: center;
     padding: 10px;
-    background-color: white; /* Optional background color */
+    background: linear-gradient(to right, #92c7eb, #8979c2);
     font-size: 14px;
-    color: #333333; /* Optional text color */
+    color: white; 
+   
 }
+
 .hidden { display: none; }
         .error { color: red; font-size: 14px; }

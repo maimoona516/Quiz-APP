@@ -68,17 +68,25 @@ let currentQuestionIndex = 0;
 let score = 0;
 let timeLeft = 120; // 2 minutes
 let totalQuestionsAttempted = 0; // Track the number of attempted questions
- // Enable "Start Quiz" button when user types 3 or more characters
- usernameInput.addEventListener('input', () => {
+// Enable "Start Quiz" button when user types the first letter
+usernameInput.addEventListener('input', () => {
     const username = usernameInput.value.trim();
-    if (username.length >= 3) {
-        startButton.classList.remove('hidden');  // Show Start button
-        errorMessage.classList.add('hidden');    // Hide error message
+
+    // Show Start button as soon as the user types the first letter
+    if (username.length >= 1) {
+        startButton.classList.remove('hidden'); // Show Start button
     } else {
-        startButton.classList.add('hidden');     // Hide Start button
+        startButton.classList.add('hidden');    // Hide Start button if no input
+    }
+
+    // Show error message if the username has less than 3 characters
+    if (username.length < 3) {
         errorMessage.classList.remove('hidden'); // Show error message
+    } else {
+        errorMessage.classList.add('hidden');    // Hide error message once name has 3 or more characters
     }
 });
+
 
 // Shuffle answers
 function shuffleAnswers(array) {
@@ -152,19 +160,50 @@ function resetState() {
     nextButton.classList.add('hidden');
 }
 
+let answeredQuestions = new Set(); // Track questions that have been answered
+
 // Select an answer
 function selectAnswer(e) {
     const selectedButton = e.target;
-    const correct = selectedButton.dataset.correct;
-    if (correct) {
-        score++;
-        selectedButton.style.backgroundColor = '#4CAF50';
-    } else {
-        selectedButton.style.backgroundColor = '#f44336';
+    
+    // If this question has already been answered, ignore any further clicks
+    if (answeredQuestions.has(currentQuestionIndex)) {
+        return; 
     }
-    totalQuestionsAttempted++; // Track how many questions the user attempts
-    nextButton.classList.remove('hidden');
+    
+    // Mark this question as answered by adding it to the answeredQuestions set
+    answeredQuestions.add(currentQuestionIndex);
+    
+    const correct = selectedButton.dataset.correct === 'true'; // Explicitly check if the answer is correct
+    
+    if (correct) {
+        score++; // Increment score only for correct answers on the first attempt
+        selectedButton.style.backgroundColor = '#4CAF50'; // Green for correct
+    } else {
+        selectedButton.style.backgroundColor = '#f44336'; // Red for incorrect
+    }
+
+    // Disable all other answer buttons for this question
+    Array.from(answerButtonsElement.children).forEach(button => {
+        button.disabled = true;
+        if (button.dataset.correct === 'true') {
+            button.style.backgroundColor = '#4CAF50'; // Highlight correct answer
+        }
+    });
+
+    totalQuestionsAttempted++; // Track how many questions the user attempts (only on the first attempt)
+    nextButton.classList.remove('hidden'); // Show the next button after answer is selected
 }
+
+// Restart the quiz (resets the answeredQuestions set)
+restartButton.addEventListener('click', () => {
+    resultContainer.classList.add('hidden');
+    startContainer.classList.remove('hidden');
+    quizContainer.classList.add('hidden');
+    startButton.classList.add('hidden'); // Hide start button again until user enters a name
+    answeredQuestions.clear(); // Clear the set of answered questions
+});
+
 
 // Move to the next question or show the result
 nextButton.addEventListener('click', () => {
@@ -175,40 +214,38 @@ nextButton.addEventListener('click', () => {
         showResult();
     }
 });
-
 // Display the result with grade and user details
 function showResult() {
     quizContainer.classList.add('hidden');
     resultContainer.classList.remove('hidden');
 
     const username = usernameInput.value.trim();
-    userScoreElement.innerText = `${score} out of ${questions.length}`;
+    userScoreElement.innerText = `${score} out of ${questions.length}`; // Display score out of total questions
 
-    const scorePercentage = (score / questions.length) * 100;
+    const scorePercentage = (score / questions.length) * 100; // Calculate percentage based on correct answers
     let grade = '';
 
     if (scorePercentage >= 90) {
         grade = 'A';
-        resultMessage.innerText = `Congratulations, ${username}! 🎉 You attempted ${totalQuestionsAttempted} questions.`;
+        resultMessage.innerText = `Congratulations, ${username}! 🎉 You attempted ${totalQuestionsAttempted} questions and did a great job.`;
         emojiElement.innerText = '😁';
     } else if (scorePercentage >= 80) {
         grade = 'B';
-        resultMessage.innerText = `Good Job, ${username}! 😊 You attempted ${totalQuestionsAttempted} questions.`;
+        resultMessage.innerText = `Good Job, ${username}! 😊 You attempted ${totalQuestionsAttempted} questions and performed well.`;
         emojiElement.innerText = '😊';
     } else if (scorePercentage >= 60) {
         grade = 'C';
-        resultMessage.innerText = `Average Performance, ${username}. You attempted ${totalQuestionsAttempted} questions.`;
+        resultMessage.innerText = `Average Performance, ${username}. You attempted ${totalQuestionsAttempted} questions. Keep practicing!`;
         emojiElement.innerText = '😐';
     } else {
         grade = 'F';
-        resultMessage.innerText = `You Lose,Try again, ${username}! You attempted ${totalQuestionsAttempted} questions.`;
+        resultMessage.innerText = `You Lose, Try again, ${username}. You attempted ${totalQuestionsAttempted} questions. Don't give up!`;
         emojiElement.innerText = '😢';
     }
 
-    // Display grade
+    // Display grade with percentage
     gradeElement.innerText = `Your Grade: ${grade} (${scorePercentage.toFixed(2)}%)`;
 }
-
 // Restart the quiz
 restartButton.addEventListener('click', () => {
     resultContainer.classList.add('hidden');

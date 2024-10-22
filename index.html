@@ -10,8 +10,10 @@
     <div class="start-container" id="start-container">
         <h1>Welcome to the Quiz</h1>
         <label for="username">Enter your name:</label>
+    
         <input type="text" id="username" placeholder="Your Name">
-        <button class="btn start-btn" id="start-btn">Start Quiz</button>
+        <div id="error-message" class="error hidden">Name must contain at least 3 words!</div>
+        <button id="start-btn" class="hidden btn">Start Quiz</button>
     </div>
 
     <div class="quiz-container hidden" id="quiz-container">
@@ -29,11 +31,16 @@
         <h1 id="result-message"></h1>
         <div id="emoji"></div>
         <p id="grade"></p>
-
+       
         <p>Your Score: <span id="user-score"></span></p>
         <button class="btn" id="restart-btn">Restart Quiz</button>
     </div>
 
+
+    <footer class="footer">
+        Developed by Maimoona
+    </footer>
+    
     <script src="./script.js"></script>
 </body>
 </html>

@@ -32,6 +32,7 @@ h1 {
 .answer-buttons {
     list-style-type: none;
     margin-top: 10px;
+ 
 }
 
 .answer-buttons li {
@@ -89,7 +90,8 @@ h1 {
     padding: 20px;
     text-align: center;
     border-radius: 10px;
-    width: 400px;
+    width: 650px;
+   
 }
 
 #timer {
@@ -100,3 +102,19 @@ h1 {
 #result-container {
     text-align: center;
 }
+.hidden {
+    display: none;
+
+}
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: white; /* Optional background color */
+    font-size: 14px;
+    color: #333333; /* Optional text color */
+}
+.hidden { display: none; }
+        .error { color: red; font-size: 14px; }

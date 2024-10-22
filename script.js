@@ -56,15 +56,29 @@ const welcomeText = document.getElementById('welcome-text');
 const userScoreElement = document.getElementById('user-score');
 const resultMessage = document.getElementById('result-message');
 const emojiElement = document.getElementById('emoji');
-const gradeElement = document.getElementById('grade');  // New grade element
+const gradeElement = document.getElementById('grade');
 const timerElement = document.getElementById('time-left');
 const usernameInput = document.getElementById('username');
 const startButton = document.getElementById('start-btn');
+
+const errorMessage = document.getElementById('error-message'); // Assuming there's an element for error messages
 const restartButton = document.getElementById('restart-btn');
 
 let currentQuestionIndex = 0;
 let score = 0;
 let timeLeft = 120; // 2 minutes
+let totalQuestionsAttempted = 0; // Track the number of attempted questions
+ // Enable "Start Quiz" button when user types 3 or more characters
+ usernameInput.addEventListener('input', () => {
+    const username = usernameInput.value.trim();
+    if (username.length >= 3) {
+        startButton.classList.remove('hidden');  // Show Start button
+        errorMessage.classList.add('hidden');    // Hide error message
+    } else {
+        startButton.classList.add('hidden');     // Hide Start button
+        errorMessage.classList.remove('hidden'); // Show error message
+    }
+});
 
 // Shuffle answers
 function shuffleAnswers(array) {
@@ -88,6 +102,7 @@ function startQuiz() {
     timeLeft = 120; // Reset timer
     score = 0; // Reset score
     currentQuestionIndex = 0; // Reset question index
+    totalQuestionsAttempted = 0; // Reset attempted questions
 
     startTimer();
     showQuestion();
@@ -147,6 +162,7 @@ function selectAnswer(e) {
     } else {
         selectedButton.style.backgroundColor = '#f44336';
     }
+    totalQuestionsAttempted++; // Track how many questions the user attempts
     nextButton.classList.remove('hidden');
 }
 
@@ -160,11 +176,12 @@ nextButton.addEventListener('click', () => {
     }
 });
 
-// Display the result with grade
+// Display the result with grade and user details
 function showResult() {
     quizContainer.classList.add('hidden');
     resultContainer.classList.remove('hidden');
 
+    const username = usernameInput.value.trim();
     userScoreElement.innerText = `${score} out of ${questions.length}`;
 
     const scorePercentage = (score / questions.length) * 100;
@@ -172,19 +189,19 @@ function showResult() {
 
     if (scorePercentage >= 90) {
         grade = 'A';
-        resultMessage.innerText = 'Congratulations! 🎉';
+        resultMessage.innerText = `Congratulations, ${username}! 🎉 You attempted ${totalQuestionsAttempted} questions.`;
         emojiElement.innerText = '😁';
     } else if (scorePercentage >= 80) {
         grade = 'B';
-        resultMessage.innerText = 'Good Job! 😊';
+        resultMessage.innerText = `Good Job, ${username}! 😊 You attempted ${totalQuestionsAttempted} questions.`;
         emojiElement.innerText = '😊';
     } else if (scorePercentage >= 60) {
         grade = 'C';
-        resultMessage.innerText = 'Average Performance 😐';
+        resultMessage.innerText = `Average Performance, ${username}. You attempted ${totalQuestionsAttempted} questions.`;
         emojiElement.innerText = '😐';
     } else {
         grade = 'F';
-        resultMessage.innerText = 'You Lose! 😢';
+        resultMessage.innerText = `You Lose,Try again, ${username}! You attempted ${totalQuestionsAttempted} questions.`;
         emojiElement.innerText = '😢';
     }
 
@@ -197,5 +214,7 @@ restartButton.addEventListener('click', () => {
     resultContainer.classList.add('hidden');
     startContainer.classList.remove('hidden');
     quizContainer.classList.add('hidden');
+    startButton.classList.add('hidden'); // Hide start button again until user enters a name
 });
+
 startButton.addEventListener('click', startQuiz);

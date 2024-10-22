@@ -68,24 +68,27 @@ let currentQuestionIndex = 0;
 let score = 0;
 let timeLeft = 120; // 2 minutes
 let totalQuestionsAttempted = 0; // Track the number of attempted questions
-// Enable "Start Quiz" button when user types the first letter
+// Show Start button when user types the first character but restrict functionality until 3 characters
 usernameInput.addEventListener('input', () => {
     const username = usernameInput.value.trim();
 
-    // Show Start button as soon as the user types the first letter
+    // Show Start button as soon as the user types the first character
     if (username.length >= 1) {
-        startButton.classList.remove('hidden'); // Show Start button
+        startButton.classList.remove('hidden');  // Show Start button
     } else {
-        startButton.classList.add('hidden');    // Hide Start button if no input
+        startButton.classList.add('hidden');     // Hide Start button if no input
     }
 
-    // Show error message if the username has less than 3 characters
+    // Disable Start button functionality until the username has 3 or more characters
     if (username.length < 3) {
+        startButton.disabled = true;             // Disable the button functionality
         errorMessage.classList.remove('hidden'); // Show error message
     } else {
-        errorMessage.classList.add('hidden');    // Hide error message once name has 3 or more characters
+        startButton.disabled = false;            // Enable the button when 3+ characters
+        errorMessage.classList.add('hidden');    // Hide error message
     }
 });
+
 
 
 // Shuffle answers
